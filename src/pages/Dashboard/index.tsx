@@ -24,9 +24,9 @@ interface Transaction {
 }
 
 interface Balance {
-  income: number;
-  outcome: number;
-  total: number;
+  income: string;
+  outcome: string;
+  total: string;
 }
 
 const Dashboard: React.FC = () => {
@@ -43,9 +43,14 @@ const Dashboard: React.FC = () => {
           formattedValue: formatValue(transaction.value),
           formattedDate: new Date(transaction.created_at).toLocaleDateString('pt-br')
         }))
+        const formatBalance = {
+          income: formatValue(response.data.balance.income),
+          outcome:formatValue(response.data.balance.outcome),
+          total:formatValue(response.data.balance.total),
+        };
 
         setTransactions(formatTransactions);
-        setBalance(balance);
+        setBalance(formatBalance);
       })
     }
 
@@ -62,21 +67,21 @@ const Dashboard: React.FC = () => {
               <p>Entradas</p>
               <img src={income} alt="Income" />
             </header>
-            <h1 data-testid="balance-income">{`R$ ${formatValue(balance.income)}`}</h1>
+            <h1 data-testid="balance-income">{`R$ ${balance.income}`}</h1>
           </Card>
           <Card>
             <header>
               <p>Saídas</p>
               <img src={outcome} alt="Outcome" />
             </header>
-            <h1 data-testid="balance-outcome">{`R$ ${formatValue(balance.outcome)}`}</h1>
+            <h1 data-testid="balance-outcome">{`R$ ${balance.outcome}`}</h1>
           </Card>
           <Card total>
             <header>
               <p>Total</p>
               <img src={total} alt="Total" />
             </header>
-            <h1 data-testid="balance-total">{`R$ ${formatValue(balance.total)}`}</h1>
+            <h1 data-testid="balance-total">{`R$ ${balance.total}`}</h1>
           </Card>
         </CardContainer>
 
@@ -95,7 +100,7 @@ const Dashboard: React.FC = () => {
                 <tr key={transaction.id}>
                 <td className="title">{transaction.title}</td>
 
-               <td className={transaction.type == "income" ? "income" : "outcome"}>{`${transaction.type == "outcome" ? "-": ""}R$ ${transaction.formattedValue}`}</td>
+               <td className={transaction.type == "income" ? "income" : "outcome"}>{`${transaction.type == "outcome" ? "- ": ""}${transaction.formattedValue}`}</td>
                 <td>{transaction.category.title}</td>
                 <td>{transaction.formattedDate}</td>
               </tr>
